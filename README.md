@@ -11,7 +11,10 @@ These [remote MCP servers are managed by Google](https://docs.cloud.google.com/m
 * [**Google Maps (Grounding Lite)**](https://developers.google.com/maps/ai/grounding-lite)  
 * [**BigQuery**](https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp)  
 * [**Kubernetes Engine (GKE)**](https://docs.cloud.google.com/kubernetes-engine/docs/reference/mcp)   
-* [**Compute Engine (GCE)**](https://docs.cloud.google.com/compute/docs/reference/mcp)  
+* [**Compute Engine (GCE)**](https://docs.cloud.google.com/compute/docs/reference/mcp)
+* [**Google Security Operations (Chronicle)**](https://docs.cloud.google.com/chronicle/docs/reference/mcp)
+* [**Developer Knowledge API (Google Developer Documentation)**](https://developers.google.com/knowledge/mcp)
+* [**Cloud Resource Manager(https://docs.cloud.google.com/resource-manager/reference/mcp)**](https://docs.cloud.google.com/resource-manager/reference/mcp)
 
 ### **Open-source MCP servers**  
 
