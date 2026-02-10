@@ -19,7 +19,7 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.12.0",
