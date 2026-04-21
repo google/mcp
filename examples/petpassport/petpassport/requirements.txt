@@ -1,0 +1,5 @@
+google-adk==1.28.0
+python-dotenv
+google-genai
+pillow
+reportlab

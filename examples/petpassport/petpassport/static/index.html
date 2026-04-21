@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYC Pet Passport</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / History -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>NYC Pet Passport</h1>
+                <p>Your dog's perfect day out</p>
+            </div>
+            <div class="paths-container">
+                <h2>Your Walking Paths</h2>
+                <div id="paths-list" class="paths-list">
+                    <!-- Paths will be inserted here -->
+                    <div class="empty-state">No paths generated yet.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content / Chat -->
+        <div class="main-content">
+            <div class="chat-container" id="chat-container">
+                <div id="chat-messages" class="chat-messages">
+                    <!-- Messages will be inserted here -->
+                    <div class="message agent">
+                        <div class="message-content">
+                            Hello! I'm the Pet Passport Agent. Tell me about your dog (breed, location) and what kind of walk you'd like to plan today!
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="file" id="pet-image" accept="image/*" style="display: none;">
+                    <label for="pet-image" class="upload-btn" id="upload-label">📎</label>
+                    <input type="text" id="user-input" placeholder="Type your message here... (e.g., Labrador in 10001, want a cafe)">
+                    <button id="send-btn">Send</button>
+                </div>
+            </div>
+            
+            <div class="details-container hidden" id="details-container">
+                <div class="details-header">
+                    <button id="back-btn" class="back-btn">← Back to Chat</button>
+                    <h2 id="details-title">🐾 Passport Details 🐾</h2>
+                </div>
+                <div id="details-content" class="details-content pet-theme">
+                    <!-- Details will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
