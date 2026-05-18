@@ -17,9 +17,10 @@
             <div class="sidebar-header">
                 <h1>NYC Pet Passport</h1>
                 <p>Your dog's perfect day out</p>
+                <button id="new-walk-btn" class="new-walk-btn">🐾 Start New Walk</button>
             </div>
             <div class="paths-container">
-                <h2>Your Walking Paths</h2>
+                <h2 class="paths-header">Your Walking Paths <span id="clear-all-btn" class="clear-all-btn" title="Clear all walks">🗑️</span></h2>
                 <div id="paths-list" class="paths-list">
                     <!-- Paths will be inserted here -->
                     <div class="empty-state">No paths generated yet.</div>
@@ -30,6 +31,50 @@
         <!-- Main Content / Chat -->
         <div class="main-content">
             <div class="chat-container" id="chat-container">
+                <!-- Selection Dashboard Card -->
+                <div class="selector-card" id="selector-card">
+                    <h3 class="selector-title" id="selector-toggle-btn">
+                        <span>🐾 Custom Walk Planner</span>
+                        <span class="toggle-caret"></span>
+                    </h3>
+                    <div class="selector-body" id="selector-body">
+                        <div class="selector-sections">
+                            <div class="selector-section">
+                                <label>Select Dog Breed</label>
+                                <div class="segment-control" id="breed-control">
+                                    <button class="segment-btn active" data-value="Golden Retriever">🦮 Golden</button>
+                                    <button class="segment-btn" data-value="Poodle">🐩 Poodle</button>
+                                    <button class="segment-btn" data-value="Chihuahua">🐕 Chihuahua</button>
+                                </div>
+                            </div>
+                            <div class="selector-section">
+                                <label>Select NYC Neighborhood</label>
+                                <div class="segment-control" id="location-control">
+                                    <button class="segment-btn active" data-value="Central Park (10024)">🌳 Central Park</button>
+                                    <button class="segment-btn" data-value="Upper East Side (10028)">🏢 Upper East</button>
+                                    <button class="segment-btn" data-value="Chelsea (10011)">🎨 Chelsea</button>
+                                </div>
+                            </div>
+                            <div class="selector-section">
+                                <label>Add Preferences (Optional)</label>
+                                <div class="toggle-pills" id="prefs-control">
+                                    <button class="pill-btn" data-value="a cafe">☕ Cafe</button>
+                                    <button class="pill-btn" data-value="a park">🛝 Park</button>
+                                    <button class="pill-btn" data-value="a scenic route or waterfront path">🌳 Scenic Path</button>
+                                    <button class="pill-btn" data-value="a long walk (30+ minutes)">⏱️ Long Walk</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="selector-footer">
+                            <div class="image-upload-slot">
+                                <input type="file" id="pet-image" accept="image/*" style="display: none;">
+                                <label for="pet-image" class="selector-upload-btn" id="upload-label">📸 Upload Dog Photo (Optional)</label>
+                            </div>
+                            <button id="walk-btn" class="walk-action-btn">🐾 Let's Walk! 🐾</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="chat-messages" class="chat-messages">
                     <!-- Messages will be inserted here -->
                     <div class="message agent">
@@ -37,12 +82,6 @@
                             Hello! I'm the Pet Passport Agent. Tell me about your dog (breed, location) and what kind of walk you'd like to plan today!
                         </div>
                     </div>
-                </div>
-                <div class="chat-input-container">
-                    <input type="file" id="pet-image" accept="image/*" style="display: none;">
-                    <label for="pet-image" class="upload-btn" id="upload-label">📎</label>
-                    <input type="text" id="user-input" placeholder="Type your message here... (e.g., Labrador in 10001, want a cafe)">
-                    <button id="send-btn">Send</button>
                 </div>
             </div>
             
@@ -53,6 +92,30 @@
                 </div>
                 <div id="details-content" class="details-content pet-theme">
                     <!-- Details will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Details Modal -->
+    <div id="debug-modal" class="debug-modal hidden">
+        <div class="debug-modal-content">
+            <div class="debug-modal-header">
+                <h3>MCP Debug Inspector</h3>
+                <button id="close-debug-btn" class="close-debug-btn">×</button>
+            </div>
+            <div class="debug-modal-body">
+                <div class="debug-layout">
+                    <div class="debug-json-panel">
+                        <h4>Raw Protocol Message</h4>
+                        <pre><code id="debug-json"></code></pre>
+                    </div>
+                    <div class="debug-info-panel">
+                        <h4>💡 Under the Hood: Powered by MCP</h4>
+                        <div id="mcp-explanation" class="mcp-explanation">
+                            <!-- Custom developer explanation will be dynamically inserted here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,6 +1,9 @@
 import os
 import dotenv
-import tools
+try:
+    from . import tools
+except ImportError:
+    import tools
 from google.adk.agents import LlmAgent
 
 dotenv.load_dotenv()

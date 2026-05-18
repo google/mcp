@@ -39,27 +39,26 @@ def get_maps_mcp_toolset():
 
 
 def get_bigquery_mcp_toolset():   
-    credentials, project_id = google.auth.default(
-            scopes=["https://www.googleapis.com/auth/bigquery"]
-    )
-
-    credentials.refresh(google.auth.transport.requests.Request())
-    oauth_token = credentials.token
-        
-    HEADERS_WITH_OAUTH = {
-        "Authorization": f"Bearer {oauth_token}",
-        "x-goog-user-project": project_id
-    }
+    def get_auth_headers(context=None):
+        import google.auth.transport.requests
+        credentials, project_id = google.auth.default(
+                scopes=["https://www.googleapis.com/auth/bigquery"]
+        )
+        credentials.refresh(google.auth.transport.requests.Request())
+        return {
+            "Authorization": f"Bearer {credentials.token}",
+            "x-goog-user-project": project_id
+        }
 
     tools = MCPToolset(
         connection_params=StreamableHTTPConnectionParams(
             url=BIGQUERY_MCP_URL,
-            headers=HEADERS_WITH_OAUTH,
             timeout=30.0,          
             sse_read_timeout=300.0
-        )
+        ),
+        header_provider=get_auth_headers
     )
-    print("BigQuery MCP Toolset configured.")
+    print("BigQuery MCP Toolset configured with dynamic authorization.")
     return tools
 
 def generate_pet_passport_photo(prompt: str, image_path: str = None) -> str:

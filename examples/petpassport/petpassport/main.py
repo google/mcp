@@ -8,7 +8,9 @@ from google.cloud import storage
 
 # Create the standard ADK app in headless mode (web=False)
 # auto_create_session=True is CRITICAL for custom UIs that generate random session IDs.
-app = get_fast_api_app(agents_dir=".", web=False, auto_create_session=True)
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+app = get_fast_api_app(agents_dir=script_dir, web=False, auto_create_session=True)
 
 # Mount custom static files
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -91,6 +93,18 @@ async def update_path(user_id: str, path_data: dict):
             paths.append(path_data)
             
         blob.upload_from_string(json.dumps(paths))
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/paths")
+async def clear_paths(user_id: str):
+    try:
+        client = get_storage_client()
+        bucket = client.bucket(BUCKET_NAME)
+        blob = bucket.blob(f"user-{user_id}.json")
+        if blob.exists():
+            blob.delete()
         return {"status": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
