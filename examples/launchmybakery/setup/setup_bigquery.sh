@@ -2,6 +2,7 @@
 
 PROJECT_ID=$(gcloud config get-value project)
 DATASET_NAME="mcp_bakery"
+DATASET_DESCRIPTION="Dataset for MCP Bakery Demo"
 LOCATION="US"
 
 # Generate bucket name if not provided
@@ -50,6 +51,7 @@ bq query --use_legacy_sql=false \
     zip_code STRING OPTIONS(description='5-digit US Zip Code'),
     city STRING OPTIONS(description='City name, e.g., Los Angeles'),
     neighborhood STRING OPTIONS(description='Common neighborhood name, e.g., Santa Monica, Silver Lake'),
+    median_household_income INT64 OPTIONS(description='Median household income in USD'),
     total_population INT64 OPTIONS(description='Total population count in the zip code'),
     median_age FLOAT64 OPTIONS(description='Median age of residents'),
     bachelors_degree_pct FLOAT64 OPTIONS(description='Percentage of population 25+ with a Bachelors degree or higher'),
