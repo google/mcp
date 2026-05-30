@@ -44,6 +44,7 @@ You can run these open-source MCP servers locally, or deploy them to Google Clou
 * [**gcloud CLI**](https://github.com/googleapis/gcloud-mcp/tree/main/packages/gcloud-mcp)  
 * [**Google Cloud Observability**](https://github.com/googleapis/gcloud-mcp/tree/main/packages/observability-mcp)
 * [**Flutter/Dart**](https://github.com/dart-lang/ai/tree/main/pkgs/dart_mcp_server)
+* [**Angular**](https://github.com/angular/angular-cli/tree/main/packages/angular/cli/src/commands/mcp)
 * [**Google Maps Platform Code Assist toolkit**](https://developers.google.com/maps/ai/mcp)
 * [**Chrome DevTools**](https://github.com/ChromeDevTools/chrome-devtools-mcp)
 
