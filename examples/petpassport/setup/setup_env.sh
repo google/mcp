@@ -13,14 +13,20 @@ echo "Found Project ID: $PROJECT_ID"
 
 # Enable necessary APIs
 echo "Enabling APIs..."
-gcloud services enable bigquery.googleapis.com --project=$PROJECT_ID
-gcloud services enable mapstools.googleapis.com --project=$PROJECT_ID
-gcloud services enable apikeys.googleapis.com --project=$PROJECT_ID
+for SERVICE in bigquery.googleapis.com mapstools.googleapis.com apikeys.googleapis.com; do
+    if ! gcloud services enable "$SERVICE" --project=$PROJECT_ID; then
+        echo "Error: Failed to enable $SERVICE."
+        echo "Make sure you have the 'roles/serviceusage.serviceUsageAdmin' role."
+        exit 1
+    fi
+done
 
 # Enable MCP services
 echo "Enabling MCP services..."
-gcloud --quiet beta services mcp enable bigquery.googleapis.com --project=$PROJECT_ID
-gcloud --quiet beta services mcp enable mapstools.googleapis.com --project=$PROJECT_ID
+gcloud --quiet beta services mcp enable bigquery.googleapis.com --project=$PROJECT_ID \
+    || { echo "Error: Failed to enable the bigquery MCP service."; exit 1; }
+gcloud --quiet beta services mcp enable mapstools.googleapis.com --project=$PROJECT_ID \
+    || { echo "Error: Failed to enable the mapstools MCP service."; exit 1; }
 
 # Prompt for API Key
 echo "----------------------------------------------------------------"
