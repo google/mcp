@@ -1,4 +1,4 @@
-google-adk==1.28.0
+google-adk==1.28.1
 python-dotenv
 google-genai
 pillow
