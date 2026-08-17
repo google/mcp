@@ -6,7 +6,7 @@ This repository contains a list of Google's official Model Context Protocol (MCP
 
 ### **Remote MCP servers** 
 
-These [remote MCP servers are managed by Google](https://docs.cloud.google.com/mcp/overview), and are available [via endpoint](https://docs.cloud.google.com/mcp/enable-disable-mcp-servers). Below are a few key remote servrs. For a comprehensive list of all remote MCP servers managed by Google in General Availability (GA) and public preview [**vist the supported products pager**](https://docs.cloud.google.com/mcp/supported-products) 
+These [remote MCP servers are managed by Google](https://docs.cloud.google.com/mcp/overview), and are available [via endpoint](https://docs.cloud.google.com/mcp/enable-disable-mcp-servers). Below are a few key remote servers. For a comprehensive list of all remote MCP servers managed by Google in General Availability (GA) and public preview [**vist the supported products pager**](https://docs.cloud.google.com/mcp/supported-products) 
 
 
 * [**AlloyDB for PostgreSQL**](https://docs.cloud.google.com/alloydb/docs/ai/use-alloydb-mcp) 
