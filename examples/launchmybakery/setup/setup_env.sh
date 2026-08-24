@@ -13,16 +13,27 @@ echo "Found Project ID: $PROJECT_ID"
 
 # Enable necessary APIs
 echo "Enabling APIs.."
-gcloud services enable aiplatform.googleapis.com --project=$PROJECT_ID
-gcloud services enable apikeys.googleapis.com --project=$PROJECT_ID
-gcloud services enable mapstools.googleapis.com --project=$PROJECT_ID
-gcloud services enable bigquery.googleapis.com --project=$PROJECT_ID
+for SERVICE in aiplatform.googleapis.com apikeys.googleapis.com mapstools.googleapis.com bigquery.googleapis.com; do
+    if ! gcloud services enable "$SERVICE" --project=$PROJECT_ID; then
+        echo "Error: Failed to enable $SERVICE."
+        echo "Make sure you have the 'roles/serviceusage.serviceUsageAdmin' role."
+        exit 1
+    fi
+done
+
+# Enable MCP services
 ENABLED_SERVICES=$(gcloud beta services mcp list --enabled --format="value(name.basename())" --project=$PROJECT_ID)
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to list enabled MCP services."
+    exit 1
+fi
 if [[ ! "$ENABLED_SERVICES" == *"mapstools.googleapis.com"* ]]; then
-    gcloud --quiet beta services mcp enable mapstools.googleapis.com --project=$PROJECT_ID
+    gcloud --quiet beta services mcp enable mapstools.googleapis.com --project=$PROJECT_ID \
+        || { echo "Error: Failed to enable the mapstools MCP service."; exit 1; }
 fi
 if [[ ! "$ENABLED_SERVICES" == *"bigquery.googleapis.com"* ]]; then
-    gcloud --quiet beta services mcp enable bigquery.googleapis.com --project=$PROJECT_ID
+    gcloud --quiet beta services mcp enable bigquery.googleapis.com --project=$PROJECT_ID \
+        || { echo "Error: Failed to enable the bigquery MCP service."; exit 1; }
 fi
 
 # Create API Key
@@ -37,10 +48,12 @@ if [ $? -eq 0 ]; then
     API_KEY=$(echo "$API_KEY_JSON" | grep -oP '"keyString": "\K[^"]+' 2>/dev/null || echo "$API_KEY_JSON" | grep '"keyString":' | cut -d '"' -f 4)
     if [ -z "$API_KEY" ]; then
         echo "Could not parse API Key from JSON."
+    else
+        echo "Successfully created API Key."
     fi
-    echo "Successfully created API Key."
 else
     echo "Could not automate API key creation."
+    echo "(This usually means you are missing the 'roles/serviceusage.apiKeysAdmin' role.)"
     read -p "Please enter your Google Maps Platform API Key manually: " API_KEY
 fi
 
