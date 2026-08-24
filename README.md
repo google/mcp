@@ -35,7 +35,8 @@ You can run these open-source MCP servers locally, or deploy them to Google Clou
 * [**Firebase**](https://github.com/gemini-cli-extensions/firebase/) (Gemini CLI extension)  
 * [**Cloud Run**](https://github.com/GoogleCloudPlatform/cloud-run-mcp) (Gemini CLI Extension)
 * [**Go**](https://go.dev/gopls/features/mcp) 
-* [**Google Analytics**](https://github.com/googleanalytics/google-analytics-mcp)  
+* [**Google Analytics**](https://github.com/googleanalytics/google-analytics-mcp)
+* [**Google Ads**](https://github.com/googleads/google-ads-mcp)
 * [**MCP Toolbox for Databases**](https://github.com/googleapis/genai-toolbox), including BigQuery, Cloud SQL, AlloyDB, Spanner, Firestore, and more.  
 * [**Google Cloud Storage**](https://github.com/googleapis/gcloud-mcp/tree/main/packages/storage-mcp)  
 * [**Genmedia**](https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia), including Imagen and Veo models.  
