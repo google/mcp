@@ -19,14 +19,35 @@ userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
 });
 
+const pathsById = new Map();
+let openPathId = null;
+
 async function loadPaths() {
     try {
         const response = await fetch(`/api/paths?user_id=${userId}`);
         const paths = await response.json();
         renderPaths(paths);
+        if (openPathId != null && !detailsContainer.classList.contains('hidden')) {
+            const updated = pathsById.get(String(openPathId));
+            if (updated) refreshWalkedToggles(updated);
+        }
     } catch (error) {
         console.error('Error loading paths:', error);
     }
+}
+
+function rememberPaths(paths) {
+    pathsById.clear();
+    paths.forEach((path) => {
+        if (path && path.id != null) pathsById.set(String(path.id), path);
+    });
+}
+
+function currentPath(path) {
+    if (path && path.id != null && pathsById.has(String(path.id))) {
+        return pathsById.get(String(path.id));
+    }
+    return path;
 }
 
 function renderPaths(paths) {
@@ -44,6 +65,8 @@ function renderPaths(paths) {
         return;
     }
 
+    rememberPaths(paths);
+
     if (paths.length === 0) {
         pathsList.innerHTML = '<div class="empty-state">No paths generated yet.</div>';
         return;
@@ -52,19 +75,30 @@ function renderPaths(paths) {
     pathsList.innerHTML = '';
     try {
         paths.forEach(path => {
-            const card = document.createElement('div');
+            const card = document.createElement('article');
             card.className = 'path-card';
-            card.innerHTML = `
-                <h3>${path.breed} Walk</h3>
-                <p>${path.postal_code}</p>
-                <div class="path-actions">
-                    <span class="walked-badge">${path.walked ? 'Walked' : 'Not Walked'}</span>
-                </div>
-            `;
-            card.addEventListener('click', () => {
-                showDetails(path);
-                toggleWalked(path);
-            });
+            if (path.id != null) card.dataset.pathId = String(path.id);
+            if (openPathId != null && String(path.id) === String(openPathId)) {
+                card.classList.add('is-open');
+            }
+
+            const openButton = document.createElement('button');
+            openButton.type = 'button';
+            openButton.className = 'path-open';
+            openButton.setAttribute('aria-label', `Open ${path.breed || 'pet'} walk`);
+
+            const title = document.createElement('h3');
+            title.textContent = `${path.breed || 'Pet'} Walk`;
+            const place = document.createElement('p');
+            place.textContent = path.postal_code || '';
+            openButton.append(title, place);
+            openButton.addEventListener('click', () => showDetails(currentPath(path)));
+
+            const actions = document.createElement('div');
+            actions.className = 'path-actions';
+            actions.append(createWalkedToggle(path));
+
+            card.append(openButton, actions);
             pathsList.appendChild(card);
         });
     } catch (e) {
@@ -73,52 +107,110 @@ function renderPaths(paths) {
     }
 }
 
+function createWalkedToggle(path) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'walked-toggle';
+    if (path.id != null) button.dataset.pathId = String(path.id);
+    syncWalkedToggle(button, path);
+    button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        toggleWalked(currentPath(path));
+    });
+    return button;
+}
+
+function syncWalkedToggle(button, path) {
+    const walked = Boolean(path.walked);
+    button.classList.toggle('is-walked', walked);
+    button.classList.toggle('is-pending', !walked);
+    button.textContent = walked ? 'Walked' : 'Not walked';
+    button.setAttribute('aria-pressed', String(walked));
+    button.setAttribute('aria-label', walked ? 'Mark as not walked' : 'Mark as walked');
+}
+
+function refreshWalkedToggles(path) {
+    if (path.id == null) return;
+    document.querySelectorAll(`.walked-toggle[data-path-id="${CSS.escape(String(path.id))}"]`).forEach((button) => {
+        syncWalkedToggle(button, path);
+    });
+}
+
 function showDetails(path) {
+    openPathId = path.id;
+    document.querySelectorAll('.path-card').forEach((card) => {
+        card.classList.toggle('is-open', path.id != null && card.dataset.pathId === String(path.id));
+    });
+
     chatContainer.classList.add('hidden');
     detailsContainer.classList.remove('hidden');
 
-    let imagesHtml = '';
+    const heading = document.createElement('h2');
+    heading.textContent = `🐾 ${path.breed || 'Pet'} Walk Passport 🐾`;
+
+    const location = document.createElement('p');
+    const locationLabel = document.createElement('strong');
+    locationLabel.textContent = 'Location: ';
+    location.append(locationLabel, document.createTextNode(path.postal_code || ''));
+
+    const itinerary = document.createElement('div');
+    itinerary.className = 'itinerary-content';
+    itinerary.innerHTML = processText(path.route_details);
+
+    const images = document.createElement('div');
+    images.className = 'images-container';
     if (path.image_paths && path.image_paths.length > 0) {
         path.image_paths.forEach(src => {
             let url = src;
-            if (url.startsWith('file:///tmp/')) {
+            if (typeof url === 'string' && url.startsWith('file:///tmp/')) {
                 url = url.replace('file:///tmp/', '/tmp/');
             }
-            imagesHtml += `<img src="${url}" alt="${path.breed} image" style="max-width: 300px; border-radius: 8px; margin-top: 8px;">`;
+            const image = document.createElement('img');
+            image.src = url;
+            image.alt = `${path.breed || 'Pet'} image`;
+            images.appendChild(image);
         });
     }
 
-    detailsContent.innerHTML = `
-        <h2>🐾 ${path.breed} Walk Passport 🐾</h2>
-        <p><strong>Location:</strong> ${path.postal_code}</p>
-        <div class="itinerary-content">
-            ${processText(path.route_details)}
-        </div>
-        <div class="images-container">
-            ${imagesHtml}
-        </div>
-        <div class="modal-actions">
-            <span class="walked-badge">${path.walked ? 'Walked' : 'Not Walked'}</span>
-        </div>
-    `;
+    const actions = document.createElement('div');
+    actions.className = 'modal-actions';
+    actions.append(createWalkedToggle(path));
+
+    detailsContent.replaceChildren(heading, location, itinerary, images, actions);
 }
 
 backBtn.addEventListener('click', () => {
+    openPathId = null;
+    document.querySelectorAll('.path-card.is-open').forEach((card) => card.classList.remove('is-open'));
     detailsContainer.classList.add('hidden');
     chatContainer.classList.remove('hidden');
 });
 
+const walkSavesInFlight = new Set();
+
 async function toggleWalked(path) {
-    path.walked = !path.walked;
+    const key = path.id != null ? String(path.id) : path;
+    if (walkSavesInFlight.has(key)) return;
+    walkSavesInFlight.add(key);
+
+    const previous = Boolean(path.walked);
+    path.walked = !previous;
+    refreshWalkedToggles(path);
     try {
-        await fetch(`/api/paths?user_id=${userId}`, {
+        const response = await fetch(`/api/paths?user_id=${userId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(path)
         });
-        loadPaths();
+        if (!response.ok) {
+            throw new Error(`Save failed (${response.status})`);
+        }
     } catch (error) {
+        path.walked = previous;
+        refreshWalkedToggles(path);
         console.error('Error updating path:', error);
+    } finally {
+        walkSavesInFlight.delete(key);
     }
 }
 

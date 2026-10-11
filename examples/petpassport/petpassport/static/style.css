@@ -186,13 +186,37 @@ body {
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 12px;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
+    transition: transform 0.2s, background 0.2s, border-color 0.2s;
 }
 
-.path-card:hover {
+.path-card:hover,
+.path-card.is-open {
     transform: translateY(-2px);
     background: rgba(255, 255, 255, 0.1);
+}
+
+.path-card.is-open {
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.path-open {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0 0 8px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.path-open:focus-visible,
+.walked-toggle:focus-visible,
+.back-btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
 }
 
 .path-card h3 {
@@ -204,19 +228,34 @@ body {
 .path-card p {
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin-bottom: 8px;
+    margin-bottom: 0;
 }
 
 .path-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     font-size: 0.8rem;
 }
 
-.walked-badge {
-    padding: 2px 6px;
-    border-radius: 4px;
+.walked-toggle {
+    border: none;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.walked-toggle.is-pending {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--text-muted);
+}
+
+.walked-toggle.is-walked {
     background: rgba(16, 185, 129, 0.2);
     color: #10b981;
 }
@@ -257,9 +296,20 @@ body {
 
 .details-header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
     margin-bottom: 24px;
+}
+
+.details-header h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.35rem;
+    line-height: 1.2;
+    margin: 0;
+    min-width: 0;
+    flex: 1 1 10rem;
 }
 
 .back-btn {
@@ -291,8 +341,11 @@ body {
 
 .details-content h2 {
     font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.25;
     margin-bottom: 16px;
     text-align: center;
+    overflow-wrap: break-word;
 }
 
 .itinerary-content {
@@ -300,14 +353,23 @@ body {
     line-height: 1.6;
     overflow-wrap: break-word;
     word-wrap: break-word;
-    white-space: pre-wrap;
-    word-break: break-all;
 }
 
 .itinerary-content * {
     overflow-wrap: break-word;
     word-wrap: break-word;
-    word-break: break-all;
+}
+
+.itinerary-content p,
+.itinerary-content ul,
+.itinerary-content ol {
+    margin-bottom: 0.75rem;
+}
+
+.images-container img {
+    max-width: 300px;
+    border-radius: 8px;
+    margin-top: 8px;
 }
 
 .images-container {
